@@ -67,7 +67,7 @@ function make_clean_file($cache_filename)
     $clean_filename = $cache_filename . ".clean";
     $readable_file_path = "cache/" . $cache_filename . ".readable";
     $path = "cache/" . $clean_filename;
-    $cmd = ". /Users/terzeron/.bashrc; export PATH=/usr/local/bin:/usr/bin:/bin; eval \"\$(pyenv  init -)\"; pyenv shell v3.5.2; pyenv activate --quiet; export FEED_MAKER_HOME=/Users/terzeron/workspace/fmd; export PATH=\$FEED_MAKER_HOME/bin:/Users/terzeron/.pyenv/shims/python3:\$PATH; export PYTHONPATH=\$FEED_MAKER_HOME/bin; cat $readable_file_path | extract.py '' > $path 2>&1";
+    $cmd = "cat $readable_file_path | python extract.py '' > $path";
     //print "cmd=$cmd<br>\n";
     shell_exec($cmd);
 
