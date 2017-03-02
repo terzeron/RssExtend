@@ -1,0 +1,6 @@
+{
+    "require": {
+        "guzzlehttp/guzzle": "^6.2",
+        "j0k3r/php-readability": "^1.1"
+    }
+}
