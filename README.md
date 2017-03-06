@@ -6,9 +6,11 @@
 * Phantom.js
 
 ### Installation
-1. `composer install`
-1. `mkdir cache logs`
-1. `chmod o+w cache/`
+1. ./initialize.sh
+    * This script executes the following commands;
+    1. `composer install`
+    1. `mkdir cache logs`
+    1. `chmod o+w cache/`
 1. Determine your top module for RssExtender.
     * http://yoursite.com/rss_extend
     * If you choose another top module, you use the new name instead of 'rss_extend'.
