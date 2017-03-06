@@ -17,8 +17,20 @@ function get_html_from_url_and_save_to_cache($url, $filename)
             
             $path = "cache/" . $filename;
             $fp = fopen($path, "w");
-            fwrite($fp, $text, strlen($text)+1);
+            fwrite($fp, $text, strlen($text) + 1);
             fclose($fp);
+
+            if (strstr($text, "<frameset")) {
+                // phantomjs
+                $cmd = "phantomjs render.js $url";
+                $p = popen($cmd, "r");
+                $text_arr = array();
+                while (!feof($p)) {
+                    array_push($text_arr, fgets($p));
+                }
+                pclose($p);
+                return "".implode($text_arr);
+            }
             
             return $text;
         }
@@ -44,8 +56,7 @@ function get_html_from_file($filename)
     $text_arr = array();
     $fp = fopen($path, "r");
     while (!feof($fp)) {
-        $line = fgets($fp);
-        array_push($text_arr, $line);
+        array_push($text_arr, fgets($fp));
     }
     fclose($fp);
     return implode("", $text_arr);

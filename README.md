@@ -3,6 +3,7 @@
 * composer
 * Apache HTTPd
 * Python
+* Phantom.js
 
 ### Installation
 1. `composer install`
