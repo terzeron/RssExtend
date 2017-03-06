@@ -1,0 +1,13 @@
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <appender name="default" class="LoggerAppenderDailyFile">
+        <param name="file" value="logs/rss_extend.log.%s"/>
+        <param name="datePattern" value="Ymd"/>
+        <layout class="LoggerLayoutPattern">
+            <param name="conversionPattern" value="%date [%level] [%logger:%line] %message%newline"/>
+        </layout>
+    </appender>
+    <root>
+        <level value="INFO"/>
+        <appender_ref ref="default"/>
+    </root>
+</configuration>

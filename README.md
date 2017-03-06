@@ -7,6 +7,7 @@
 
 ### Installation
 1. `composer install`
+1. `mkdir cache logs`
 1. `chmod o+w cache/`
 1. Determine your top module for RssExtender.
     * http://yoursite.com/rss_extend

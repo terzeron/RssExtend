@@ -1,6 +1,7 @@
 {
     "require": {
         "guzzlehttp/guzzle": "^6.2",
-        "j0k3r/php-readability": "^1.1"
+        "j0k3r/php-readability": "^1.1",
+        "apache/log4php": "^2.3"
     }
 }
