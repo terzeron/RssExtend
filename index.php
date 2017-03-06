@@ -1,6 +1,8 @@
 <?php
 require 'vendor/autoload.php';
 
+Logger::configure("log4php.conf.xml");
+$logger = Logger::getLogger("index.php");
 
 function get_short_md5_name($url)
 {
@@ -9,17 +11,14 @@ function get_short_md5_name($url)
 
 function get_html_from_url_and_save_to_cache($url, $filename)
 {
+    global $logger;
+    
     $client = new \GuzzleHttp\Client();
     try {
         $res = $client->request('GET', $url);
         if ($res->getStatusCode() == 200) {
             $text = (string) $res->getBody();
             
-            $path = "cache/" . $filename;
-            $fp = fopen($path, "w");
-            fwrite($fp, $text, strlen($text) + 1);
-            fclose($fp);
-
             if (strstr($text, "<frameset")) {
                 // phantomjs
                 $cmd = "phantomjs render.js $url";
@@ -29,15 +28,19 @@ function get_html_from_url_and_save_to_cache($url, $filename)
                     array_push($text_arr, fgets($p));
                 }
                 pclose($p);
-                return "".implode($text_arr);
+                $text = "".implode($text_arr);
             }
             
+            $path = "cache/" . $filename;
+            $fp = fopen($path, "w");
+            fwrite($fp, $text, strlen($text) + 1);
+            fclose($fp);
+
             return $text;
         }
     } catch (Exception $e) {
-        print("url=$url<br>\n");
+        $logger->error("Unreachable document in " . $url);
     }
-    throw new Exception("Unreachable document");
 }
 
 function check_file_existence($filename)
@@ -78,7 +81,7 @@ function make_clean_file($cache_filename)
     $clean_filename = $cache_filename . ".clean";
     $readable_file_path = "cache/" . $cache_filename . ".readable";
     $path = "cache/" . $clean_filename;
-    $cmd = "cat $readable_file_path | python extract.py '' > $path";
+    $cmd = ". /Users/terzeron/.bashrc; export PATH=/usr/local/bin:/usr/bin:/bin; eval \"\$(pyenv  init -)\"; pyenv shell v3.5.2; pyenv activate --quiet; export FEED_MAKER_HOME=/Users/terzeron/workspace/fmd; export PATH=\$FEED_MAKER_HOME/bin:/Users/terzeron/.pyenv/shims/python3:\$PATH; export PYTHONPATH=\$FEED_MAKER_HOME/bin; cat $readable_file_path | extract.py '' > $path 2>&1";
     //print "cmd=$cmd<br>\n";
     shell_exec($cmd);
 
@@ -87,7 +90,10 @@ function make_clean_file($cache_filename)
 
 function get_readable_html_from_url($url)
 {
+    global $logger;
+
     $cache_filename = get_short_md5_name($url);
+    $logger->info($url . " -> " . $cache_filename);
     $readable_filename = $cache_filename . ".readable";
     $clean_filename = $cache_filename . ".clean";
     //print "url=$url<br>\n";
@@ -124,39 +130,57 @@ function get_readable_html_from_url($url)
 
 function read_url($url)
 {
-    $client = new \GuzzleHttp\Client();
-    $res = $client->request('GET', $url);
-    if ($res->getStatusCode() == 200) {
-        $text = (string) $res->getBody();
-        return $text;
-    } else {
-        throw new Exception("Unreachable document");
+    global $logger;
+
+    try {
+        $client = new \GuzzleHttp\Client();
+        $res = $client->request('GET', $url);
+        if ($res->getStatusCode() == 200) {
+            $text = (string) $res->getBody();
+            return $text;
+        } else {
+            $logger->error("Failure in getting " . $url);
+        }
+    } catch (Exception $e) {
+        $logger->error("Invalid url: " . $url);
     }
 }
 
 function extend_rss($text)
 {
-    $xml = new SimpleXMLElement($text);;
-    $items = $xml->{"channel"}->{"item"};
-    foreach ($items as $item) {
-        $url = (string) $item->{"guid"};
-        if (preg_match("/^https?:\/\//", $url)) {
-            $item->{"description"} = get_readable_html_from_url($url);
-        } else {
-            $url = (string) $item->{"link"};
+    global $logger;
+    
+    try {
+        $xml = new SimpleXMLElement($text);;
+        $items = $xml->{"channel"}->{"item"};
+        foreach ($items as $item) {
+            $url = (string) $item->{"guid"};
             if (preg_match("/^https?:\/\//", $url)) {
                 $item->{"description"} = get_readable_html_from_url($url);
+            } else {
+                $url = (string) $item->{"link"};
+                if (preg_match("/^https?:\/\//", $url)) {
+                    $item->{"description"} = get_readable_html_from_url($url);
+                }
             }
         }
+        print $xml->asXML();
+    } catch (Exception $e) {
+        $logger->error("Invalid xml format: " . $text);
     }
-    print $xml->asXML();
 }
 
 function main()
 {
+    global $logger;
+    
     $url = $_SERVER['REQUEST_URI'];
-    $remote_url = preg_replace('/^\/rss_extend\/(.*)/', '$1', $url);
-
+    $remote_url = preg_replace('/.*\/(https?:\/\/.*)/', '$1', $url);
+    if ($remote_url == "") {
+        exit(0);
+    }
+    $logger->info("Processing " . $remote_url);
+    
     $text = read_url($remote_url);
     
     extend_rss($text);
