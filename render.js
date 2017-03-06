@@ -25,9 +25,17 @@ page.open(url, function (status) {
 		console.log('Unable to access the page, "' + url + '"');
 		phantom.exit(-1);
 	} else {
-        if (page.framesCount > 0) {
-            for (var i = 0; i < page.framesCount; i++) {
+        if (page.childFramesCount() > 0) {
+            for (var i = 0; i < page.childFramesCount(); i++) {
+                //console.log("i=" + i);
                 page.switchToChildFrame(i);
+                if (page.childFramesCount() > 0) {
+                    for (var j = 0; j < page.childFramesCount(); j++) {
+                        //console.log("j=" + j);
+                        page.switchToChildFrame(j);
+                        render(page);
+                    }
+                }
                 render(page);
             }
        } else {
