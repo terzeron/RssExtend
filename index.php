@@ -107,10 +107,8 @@ function get_readable_html_from_url($url)
             //print("$clean_filename don't exist<br>\n");
             $html = make_clean_file($cache_filename);
         }
-        return $html;
-    } else {
-        throw new Exception("Unreadable document");
     }
+    return $html;
 }
 
 function read_url($url)
