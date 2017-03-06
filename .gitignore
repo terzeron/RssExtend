@@ -1,2 +1,6 @@
 cache/
 logs/
+vendor/
+__pycache__/
+
+composer.lock
