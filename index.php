@@ -65,7 +65,7 @@ function get_html_from_file($filename)
     return implode("", $text_arr);
 }
 
-function make_readable_file($cache_filename, $html)
+function save_readable_file($cache_filename, $html)
 {
     $readable_filename = $cache_filename . ".readable";
     $path = "cache/" . $readable_filename;
@@ -79,9 +79,9 @@ function make_readable_file($cache_filename, $html)
 function make_clean_file($cache_filename)
 {
     $clean_filename = $cache_filename . ".clean";
-    $readable_file_path = "cache/" . $cache_filename . ".readable";
+    $cache_file_path = "cache/" . $cache_filename;
     $path = "cache/" . $clean_filename;
-    $cmd = "cat $readable_file_path | extract.py '' > $path 2>&1";
+    $cmd = "cat $cache_file_path | extract.py '' > $path 2>&1";
     //print "cmd=$cmd<br>\n";
     shell_exec($cmd);
 
@@ -92,6 +92,10 @@ function get_readable_html_from_url($url)
 {
     global $logger;
 
+    $do_exist_cache = false;
+    $do_exist_clean = false;
+    $do_exist_readable = false;
+
     $cache_filename = get_short_md5_name($url);
     $logger->info($url . " -> " . $cache_filename);
     $readable_filename = $cache_filename . ".readable";
@@ -100,31 +104,34 @@ function get_readable_html_from_url($url)
     //print "cache_filename=$cache_filename, clean_filename=$clean_filename<br>\n";
 
     if (check_file_existence($cache_filename)) {
+        $do_exist_cache = true;
         $html = get_html_from_file($cache_filename);
     } else {
         $html = get_html_from_url_and_save_to_cache($url, $cache_filename);
     }
     
-    $readability = new Readability\Readability($html, $url);
-    $result = $readability->init();
-    if ($result) {
-        $html = $readability->getContent()->innerHTML;
-        if (check_file_existence($readable_filename)) {
-            //print("$readable_filename exists<br>\n");
-            $html = get_html_from_file($readable_filename);
-        } else {
-            //print("$readable_filename don't exist<br>\n");
-            make_readable_file($cache_filename, $html);
-        }
-        
-        if (check_file_existence($clean_filename)) {
-            //print("$clean_filename exists<br>\n");
-            $html = get_html_from_file($clean_filename);
-        } else {
-            //print("$clean_filename don't exist<br>\n");
-            $html = make_clean_file($cache_filename);
+    if (check_file_existence($clean_filename)) {
+        $do_exist_clean = true;
+        $html = get_html_from_file($clean_filename);
+    } else {
+        $html = make_clean_file($cache_filename);
+    }
+
+    if (check_file_existence($readable_filename)) {
+        $do_exist_readable = true;
+        $html = get_html_from_file($readable_filename);
+    } else {
+        $readability = new Readability\Readability($html, $url);
+        $result = $readability->init();
+        if ($result) {
+            $html = $readability->getContent()->innerHTML;
+            save_readable_file($cache_filename, $html);
         }
     }
+    $logger->info("File existence: " . 
+                  "cache[" . ($do_exist_cache ? "O" : "X") . "], " .
+                  "clean[" . ($do_exist_clean ? "O" : "X") . "], " .
+                  "readable[" . ($do_exist_readable ? "O" : "X") . "]");
     return $html;
 }
 
