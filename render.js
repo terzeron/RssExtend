@@ -25,18 +25,23 @@ page.open(url, function (status) {
 		console.log('Unable to access the page, "' + url + '"');
 		phantom.exit(-1);
 	} else {
+        console.log("<!-- page.childFramesCount=" + page.childFramesCount() + " in the first level -->");
         if (page.childFramesCount() > 0) {
             for (var i = 0; i < page.childFramesCount(); i++) {
-                //console.log("i=" + i);
+                console.log("<!-- i=" + i + " -->");
                 page.switchToChildFrame(i);
+                
+                console.log("<!-- page.childFramesCount=" + page.childFramesCount() + " in the second level -->");
                 if (page.childFramesCount() > 0) {
                     for (var j = 0; j < page.childFramesCount(); j++) {
-                        //console.log("j=" + j);
+                        console.log("<!-- j=" + j + " -->");
                         page.switchToChildFrame(j);
                         render(page);
+                        page.switchToParentFrame();
                     }
                 }
                 render(page);
+                page.switchToParentFrame();
             }
        } else {
             render(page);
