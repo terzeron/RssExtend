@@ -11,6 +11,8 @@
     1. `composer install`
     1. `mkdir cache logs`
     1. `chmod o+w cache/`
+2. configuration
+    1. change your dbname, username, password in batch.py and common.php
 
 ### Description
 This web service read the partial RSS and convert it to a full RSS. It crawls the original web pages and make a full  RSS by injecting the content of the web pages to the <description> element of the partial RSS.
