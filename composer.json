@@ -1,7 +1,19 @@
 {
+    "scripts": {
+        "post-install-cmd": [
+            "PhantomInstaller\\Installer::installPhantomJS"
+        ],
+        "post-update-cmd": [
+            "PhantomInstaller\\Installer::installPhantomJS"
+        ]
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
     "require": {
         "guzzlehttp/guzzle": "^6.2",
         "j0k3r/php-readability": "^1.1",
-        "apache/log4php": "^2.3"
+        "apache/log4php": "^2.3",
+        "jonnyw/php-phantomjs": "^4.6"
     }
 }
