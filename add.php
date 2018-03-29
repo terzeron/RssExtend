@@ -138,7 +138,7 @@ function get_readable_html_from_url($url)
         $do_exist_readable = true;
         $html = get_html_from_file($readable_filename);
     } else {
-        $readability = new Readability\Readability($html, $url);
+        $readability = new Readability\Readability($html);
         $result = $readability->init();
         if ($result) {
             $html = $readability->getContent()->innerHTML;
@@ -212,6 +212,8 @@ function extend_rss($text)
 
 function update_status($remote_url, $status)
 {
+    global $logger;
+    
     $conf = read_config();
     $db_name = $conf['db_name'];
     $user = $conf['db_user'];
@@ -225,9 +227,10 @@ function update_status($remote_url, $status)
         $query = "update rss set mtime = now(), status = " . $status . " where url = '" . $remote_url . "'";
     } else {
         // insert
-        $query = "insert into rss (url, ctime, mtime) values ('" . $remote_url . "', now(), now(), " . $status . ")";
+        $query = "insert into rss (url, ctime, mtime, status) values ('" . $remote_url . "', now(), now(), " . $status . ")";
     }
     $dbh->exec($query);
+    $logger->info($query);
 }
 
 function register_new_url()

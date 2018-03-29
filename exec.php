@@ -22,7 +22,7 @@ function disable_feed($feed_url)
 
 function enable_feed($feed_url)
 {
-    $dbh = get_connection();
+    $dbh = get_db_connection();
     $query = "update rss set enabled = true where url = '" . $feed_url . "'";
     if ($dbh->exec($query) < 1) {
         return -1;

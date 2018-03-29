@@ -6,7 +6,7 @@ Logger::configure("log4php.conf.xml");
 $logger = Logger::getLogger("index.php");
 
 $dbh = get_db_connection();
-$query = "select * from rss";
+$query = "select * from rss order by enabled desc, mtime desc, url asc";
 $rs = $dbh->query($query);
 ?>
 
@@ -15,11 +15,10 @@ $rs = $dbh->query($query);
     <head>
         <meta charset="UTF-8">
         <title>RSS Extender</title>
-        <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-        <link href="/bootstrap/css/bootstrap-toggle.min.css" rel="stylesheet">
-        <link href="style.css" rel="stylesheet">
-        <script src="/jquery/jquery.min.js"></script>
-        <script src="/bootstrap/js/bootstrap-toggle.min.js"></script>
+        <link href="/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="/bootstrap-honoka/dist/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="style.css" rel="stylesheet"/>
+        <script src="/jquery/dist/jquery.min.js"></script>
     </head>
     
     <body>
@@ -45,7 +44,11 @@ $rs = $dbh->query($query);
                             </td>
                             <td>
                                 <?$extended_rss_url = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] . $row['url'];?>
-                                <a href="<?=$extended_rss_url?>"><?=$extended_rss_url?></a>
+                                <?if ($row['enabled']) {?>
+                                    <a href="<?=$extended_rss_url?>"><?=$extended_rss_url?></a>
+                                <?} else {?>
+                                    <?=$extended_rss_url?>
+                                <?}?>
                             </td>
                             <td><?=$row['ctime']?></td>
                             <td><?=$row['mtime']?></td>
@@ -65,16 +68,21 @@ $rs = $dbh->query($query);
          $(function() {
              $('.toggle-event').change(function(evt) {
                  var clicked_obj = $(evt.target);
-                 var feed_url_node = clicked_obj.parent().parent().siblings()[1];
+                 var feed_url_node = clicked_obj.parent().siblings()[1];
                  var feed_url = feed_url_node.getElementsByTagName("a")[0].href;
+                 console.log(feed_url_node);
                  $.post(
                      "exec.php",
                      {
-                         "command": ($(this).prop('checked') == "true" ? "enable_feed" : "disable_feed"),
+                         "command": ($(this).prop('checked') ? "enable_feed" : "disable_feed"),
                          "feed_url": feed_url
                      },
                      function(data, textStatus, jqXHR) {
-                         res = jQuery.parseJSON(data);
+                         try {
+                             res = jQuery.parseJSON(data);
+                         } catch (err) {
+                             $("body").append(data);
+                         }
                          console.log(res);
                      }
                  );

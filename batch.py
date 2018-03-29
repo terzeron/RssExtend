@@ -2,20 +2,18 @@
 
 import io
 import sys
+import json
 import urllib.request
 import mysql.connector
 
 
 def get_rss_list_from_db():
     rss_url_list = []
-    db_name = "yourdbname"
-    db_user = "yourusername"
-    db_pass = "yourpassword"
-    config = { 'user': db_user, 'password': db_pass, 'host': 'localhost', 'database': db_name }
+    config = json.load(open("db_conf.json"))
 
     cnx = mysql.connector.connect(**config)
     cur = cnx.cursor()
-    cur.execute('select url from rss where enabled = true')
+    cur.execute('select url from rss where enabled = 1')
     for row in cur.fetchall():
         rss_url_list.append(row[0])
     return rss_url_list

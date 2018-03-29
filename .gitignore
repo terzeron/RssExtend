@@ -6,3 +6,4 @@ __pycache__/
 composer.lock
 *.log
 *~
+db_conf.json
