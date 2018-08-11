@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from bs4 import BeautifulSoup, Comment
@@ -9,7 +9,7 @@ import sys
 import urllib.request, urllib.parse, urllib.error
 import copy
 import signal
-import cgi
+import html
 import feedmakerutil
 from feedmakerutil import die, err, warn
 
@@ -127,7 +127,7 @@ def traverseElement(element, url, encoding):
         # text or self-close element (<br/>)
         p = re.compile("^\s*$")
         if not p.match(str(element)):
-            sys.stdout.write("%s" % cgi.escape(str(element)))
+            sys.stdout.write("%s" % html.escape(str(element)))
         ret = 1
         return ret
     else: 
