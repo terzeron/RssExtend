@@ -98,7 +98,7 @@ function make_clean_file($cache_filename)
     $clean_filename = $cache_filename . ".clean";
     $cache_file_path = "cache/" . $cache_filename;
     $path = "cache/" . $clean_filename;
-    $cmd = "cat $cache_file_path | env LC_ALL=ko_KR.UTF-8 LANG=ko_KR.UTF-8 PATH=/usr/local/bin ./extract.py '' > $path 2>&1";
+    $cmd = "cat $cache_file_path | env LC_ALL=ko_KR.UTF-8 LANG=ko_KR.UTF-8 PATH=/home/terzeron/.pyenv/shims python ./extract.py '' > $path 2>&1";
     $logger->info("cmd=$cmd<br>\n");
     shell_exec($cmd);
 
@@ -192,11 +192,11 @@ function extend_rss($text)
             $desc_element_key = "summary";
         }
         foreach ($items as $item) {
-            $url = (string) $item->{$id_element_key};
+            $url = (string) $item->{$link_element_key};
             if (preg_match("/^https?:\/\//", $url)) {
                 $item->{$desc_element_key} = get_readable_html_from_url($url);
             } else {
-                $url = (string) $item->{$link_element_key};
+                $url = (string) $item->{$id_element_key};
                 if (preg_match("/^https?:\/\//", $url)) {
                     $item->{$desc_element_key} = get_readable_html_from_url($url);
                 }
