@@ -1,17 +1,17 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import io
 import sys
 import json
 import urllib.request
-import mysql.connector
+import MySQLdb
 
 
 def get_rss_list_from_db():
     rss_url_list = []
     config = json.load(open("db_conf.json"))
 
-    cnx = mysql.connector.connect(**config)
+    cnx = MySQLdb.connect(**config)
     cur = cnx.cursor()
     cur.execute('select url from rss where enabled = 1')
     for row in cur.fetchall():
