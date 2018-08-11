@@ -11,7 +11,7 @@
         "bin-dir": "bin"
     },
     "require": {
-        "guzzlehttp/guzzle": "^6.2",
+        "guzzlehttp/guzzle": "^6.3",
         "j0k3r/php-readability": "^1.1",
         "apache/log4php": "^2.3",
         "jonnyw/php-phantomjs": "^4.6"
