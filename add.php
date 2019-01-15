@@ -73,10 +73,12 @@ function get_html_from_file($filename)
     $path = "cache/" . $filename;
     $text_arr = array();
     $fp = fopen($path, "r");
-    while (!feof($fp)) {
-        array_push($text_arr, fgets($fp));
+    if ($fp) {
+        while (!feof($fp)) {
+            array_push($text_arr, fgets($fp));
+        }
+        fclose($fp);
     }
-    fclose($fp);
     return implode("", $text_arr);
 }
 
@@ -98,9 +100,10 @@ function make_clean_file($cache_filename)
     $clean_filename = $cache_filename . ".clean";
     $cache_file_path = "cache/" . $cache_filename;
     $path = "cache/" . $clean_filename;
-    $cmd = "cat $cache_file_path | env LC_ALL=ko_KR.UTF-8 LANG=ko_KR.UTF-8 PATH=/home/terzeron/.pyenv/shims python ./extract.py '' > $path 2>&1";
+    $cmd = "cat $cache_file_path | env PATH=/home/terzeron/.pyenv/shims:/bin:/usr/bin:/usr/local/bin ./extract.py '' > $path 2> $path.error";
     $logger->info("cmd=$cmd<br>\n");
-    shell_exec($cmd);
+    $output = shell_exec($cmd);
+    $logger->info(file_get_contents($path . ".error"));
 
     return get_html_from_file($clean_filename);
 }
@@ -145,7 +148,7 @@ function get_readable_html_from_url($url)
             save_readable_file($cache_filename, $html);
         }
     }
-    $logger->info("File existence: " . 
+    $logger->info("File '" . $cache_filename . "' existence: " . 
                   "cache[" . ($do_exist_cache ? "O" : "X") . "], " .
                   "clean[" . ($do_exist_clean ? "O" : "X") . "], " .
                   "readable[" . ($do_exist_readable ? "O" : "X") . "]");
