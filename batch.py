@@ -24,10 +24,10 @@ def main():
     for rss_url in rss_url_list:
         try:
             print(rss_url)
-            urllib.request.urlopen("https://terzeron.net/rss_extend/" + rss_url)
+            urllib.request.urlopen("https://terzeron.com/rss_extend/" + rss_url)
         except RemoteDisconnected:
             # retry
-            urllib.request.urlopen("https://terzeron.net/rss_extend/" + rss_url)
+            urllib.request.urlopen("https://terzeron.com/rss_extend/" + rss_url)
 
         
 if __name__ == "__main__":
