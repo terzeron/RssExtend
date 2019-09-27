@@ -100,7 +100,7 @@ function make_clean_file($cache_filename)
     $clean_filename = $cache_filename . ".clean";
     $cache_file_path = "cache/" . $cache_filename;
     $path = "cache/" . $clean_filename;
-    $cmd = "cat $cache_file_path | env PATH=/home/terzeron/.pyenv/shims:/bin:/usr/bin:/usr/local/bin ./extract.py '' > $path 2> $path.error";
+    $cmd = "cat $cache_file_path | env PATH=/home/terzeron/.pyenv/shims:/bin:/usr/bin:/usr/local/bin ./extract.py '' > $path 2> $path.error; [ -s \"$path.error\" ] || rm -f $path.error";
     $logger->info("cmd=$cmd<br>\n");
     $output = shell_exec($cmd);
     $logger->info(file_get_contents($path . ".error"));

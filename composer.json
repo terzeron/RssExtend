@@ -1,18 +1,11 @@
 {
-    "scripts": {
-        "post-install-cmd": [
-            "PhantomInstaller\\Installer::installPhantomJS"
-        ],
-        "post-update-cmd": [
-            "PhantomInstaller\\Installer::installPhantomJS"
-        ]
-    },
-    "config": {
-        "bin-dir": "bin"
-    },
     "require": {
+        "symfony/filesystem": "3.2.14",
+        "symfony/config": "3.2.14",
+        "symfony/dependency-injection": "3.2.14",
+        "symfony/yaml": "3.2.14",
         "guzzlehttp/guzzle": "^6.3",
-        "j0k3r/php-readability": "^1.1",
+        "j0k3r/php-readability": "^1.2",
         "apache/log4php": "^2.3",
         "jonnyw/php-phantomjs": "^4.6"
     }
