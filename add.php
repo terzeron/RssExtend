@@ -103,7 +103,9 @@ function make_clean_file($cache_filename)
     $cmd = "cat $cache_file_path | env PATH=/home/terzeron/.pyenv/shims:/bin:/usr/bin:/usr/local/bin ./extract.py '' > $path 2> $path.error; [ -s \"$path.error\" ] || rm -f $path.error";
     $logger->info("cmd=$cmd<br>\n");
     $output = shell_exec($cmd);
-    $logger->info(file_get_contents($path . ".error"));
+    if (file_exists($path)) {
+        $logger->info(file_get_contents($path . ".error"));
+    }
 
     return get_html_from_file($clean_filename);
 }
