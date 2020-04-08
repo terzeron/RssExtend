@@ -3,8 +3,6 @@ logs/
 vendor/
 __pycache__/
 
-composer.lock
 *.log
 *~
 db_conf.json
-.python-version
