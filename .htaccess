@@ -1,6 +1,7 @@
 RewriteEngine On
-RewriteRule ^/?$ index.php [L]
+RewriteBase /rss_extend
+RewriteRule ^$ index.php [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(http.*)$ add.php/$1 [L]
+RewriteRule . add.php/$1 [L]
 RewriteRule db_conf\.json - [G]
