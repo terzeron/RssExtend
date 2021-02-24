@@ -23,11 +23,10 @@ def main():
     rss_url_list = get_rss_list_from_db()
     for rss_url in rss_url_list:
         try:
-            print(rss_url)
+            print("https://terzeron.com/rss_extend/" + rss_url)
             urllib.request.urlopen("https://terzeron.com/rss_extend/" + rss_url)
-        except RemoteDisconnected:
-            # retry
-            urllib.request.urlopen("https://terzeron.com/rss_extend/" + rss_url)
+        except urllib.error.HTTPError as e:
+            print(e)
 
         
 if __name__ == "__main__":
