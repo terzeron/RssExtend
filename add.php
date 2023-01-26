@@ -1,7 +1,6 @@
 <?php
 require 'vendor/autoload.php';
 require 'common.php';
-use JonnyW\PhantomJs\Client;
 
 Logger::configure("log4php.conf.xml");
 $logger = Logger::getLogger("add.php");
@@ -22,26 +21,25 @@ function get_html_from_url_and_save_to_cache($url, $filename)
         if ($res->getStatusCode() == 200) {
             $text = (string) $res->getBody();
             
-            while (true) {
-                if (strstr($text, "<frameset") and preg_match('/<frame\s+[^>]*src=[\'\"]([^\'\"]+)[\'\"]/', $text, $matches)) {
-                    $url = $matches[1];
+            if (preg_match_all('/<i?frame\s+[^>]*src=[\'\"]([^\'\"]+)[\'\"]/', $text, $matches)) {
+                foreach ($matches[1] as $match) {
+                    $logger->info($match);
+                    $url = $match;
                     if (!preg_match('/^http/', $url)) {
                         $url = $url_prefix . $url;
                     }
                     $url = preg_replace('/&amp;/', '&', $url);
-                    $logger->info("executing phantomjs for subframe url '" . $url . "'");
-                    $client = Client::getInstance();
-                    $request = $client->getMessageFactory()->createRequest($url, 'GET');
-                    $response = $client->getMessageFactory()->createResponse();
-                    $client->send($request, $response);
-                    if ($response->getStatus() === 200) {
-                        $text = $response->getContent();
+                    $logger->info("executing web client for subframe url '" . $url . "'");
+                    $response = $client->request('GET', $url);
+                    if ($response->getStatusCode() === 200) {
+                        $logger->info("getting html from subframe url");
+                        $text = $response->getBody();
+                    } else {
+                        $logger->info($response->getStatusCode());
+                        $logger->info($response->getBody());
                     }
-                    
-                    $url_prefix = parse_url($url)['scheme'] . "://" . parse_url($url)['host'];
-                    sleep(1);
-                } else {
-                    break;
+                    //$url_prefix = parse_url($url)['scheme'] . "://" . parse_url($url)['host'];
+                    //sleep(1);
                 }
             }
             
@@ -101,7 +99,7 @@ function make_clean_file($cache_filename)
     $cache_file_path = "cache/" . $cache_filename;
     $path = "cache/" . $clean_filename;
     $cmd = "cat $cache_file_path | env PATH=/home/terzeron/.pyenv/shims:/bin:/usr/bin:/usr/local/bin ./extract.py '' > $path 2> $path.error; [ -s \"$path.error\" ] || rm -f $path.error";
-    $logger->info("cmd=$cmd<br>\n");
+    $logger->info("cmd=$cmd");
     $output = shell_exec($cmd);
     if (file_exists($path)) {
         $logger->info(file_get_contents($path . ".error"));
@@ -210,7 +208,7 @@ function extend_rss($text)
         print $xml->asXML();
         return true;
     } catch (Exception $e) {
-        $logger->error("Invalid xml format: " . $text);
+        $logger->error("Invalid xml format: " . $text . ", " . $e);
         return false;
     }
 }
