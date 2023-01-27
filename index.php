@@ -6,7 +6,7 @@ Logger::configure("log4php.conf.xml");
 $logger = Logger::getLogger("index.php");
 
 $dbh = get_db_connection();
-$query = "select * from rss order by enabled desc, mtime desc, url asc";
+$query = "select * from rss order by enabled desc, published_time desc, url asc";
 $rs = $dbh->query($query);
 ?>
 
@@ -27,10 +27,12 @@ $rs = $dbh->query($query);
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Feed ID</th>
                         <th>URL</th>
                         <th>Extended RSS</th>
                         <th>Registration time</th>
                         <th>Last modified time</th>
+                        <th>Last published time</th>
                         <th>Status</th>
                         <th>Enabled / Disabled</th>
                     </tr>
@@ -39,6 +41,7 @@ $rs = $dbh->query($query);
                     <?foreach ($rs as $row) {?>
                         <tr>
                             <td><?=$row['id']?></td>
+                            <td><?=$row['feed_id']?></td>
                             <td>
                                 <a href="<?=$row['url']?>"><?=$row['url']?></a>
                             </td>
@@ -52,6 +55,7 @@ $rs = $dbh->query($query);
                             </td>
                             <td><?=$row['ctime']?></td>
                             <td><?=$row['mtime']?></td>
+                            <td><?=$row['published_time']?></td>
                             <td>
                                 <button type="button" class="btn btn-xs btn-<?=($row['status'] ? "success" : "danger")?>"><?=($row['status'] ? "Ok" : "Not Ok")?></button>
                             </td>
@@ -68,9 +72,17 @@ $rs = $dbh->query($query);
          $(function() {
              $('.toggle-event').change(function(evt) {
                  var clicked_obj = $(evt.target);
-                 var feed_url_node = clicked_obj.parent().siblings()[1];
+                 console.log(clicked_obj);
+                 var siblings = clicked_obj.parent().siblings();
+                 console.log(siblings);
+                 for (let i = 0; i < siblings.length; i++) {
+                     if (siblings[i].children && siblings[i].children[0] && siblings[i].children[0].tagName === "A") {
+                         var feed_url_node = siblings[i];
+                         break;
+                     }
+                 }
                  var feed_url = feed_url_node.getElementsByTagName("a")[0].href;
-                 console.log(feed_url_node);
+                 console.log(feed_url);
                  $.post(
                      "exec.php",
                      {
