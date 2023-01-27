@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "81df7331c8aa1a7296cde6fed91e4f10",
+    "content-hash": "3917ab4628b93a21f6644d534201dd83",
     "packages": [
         {
             "name": "apache/log4php",
@@ -461,120 +461,6 @@
                 }
             ],
             "time": "2022-06-13T04:15:24+00:00"
-        },
-        {
-            "name": "jakoch/phantomjs-installer",
-            "version": "2.1.1-p08",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jakoch/phantomjs-installer.git",
-                "reference": "7775820cf5eae8962cf68ab44757238e4d3136cc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jakoch/phantomjs-installer/zipball/7775820cf5eae8962cf68ab44757238e4d3136cc",
-                "reference": "7775820cf5eae8962cf68ab44757238e4d3136cc",
-                "shasum": ""
-            },
-            "require": {
-                "ext-bz2": "*",
-                "ext-openssl": "*",
-                "php": ">5.3"
-            },
-            "require-dev": {
-                "composer/composer": "^1.2",
-                "phpunit/phpunit": "^4.8"
-            },
-            "type": "custom-installer",
-            "autoload": {
-                "psr-0": {
-                    "PhantomInstaller\\": "src/"
-                },
-                "psr-4": {
-                    "PhantomInstaller\\Test\\": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jens-André Koch",
-                    "email": "jakoch@web.de"
-                }
-            ],
-            "description": "A Composer package which installs the PhantomJS binary (Linux, Windows, Mac) into `/bin` of your project.",
-            "keywords": [
-                "binaries",
-                "headless",
-                "phantomjs"
-            ],
-            "support": {
-                "issues": "https://github.com/jakoch/phantomjs-installer/issues",
-                "source": "https://github.com/jakoch/phantomjs-installer/tree/master"
-            },
-            "time": "2017-01-10T09:56:38+00:00"
-        },
-        {
-            "name": "jonnyw/php-phantomjs",
-            "version": "v4.6.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jonnnnyw/php-phantomjs.git",
-                "reference": "f35764503f6828908fd1108c960080edf915eabe"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jonnnnyw/php-phantomjs/zipball/f35764503f6828908fd1108c960080edf915eabe",
-                "reference": "f35764503f6828908fd1108c960080edf915eabe",
-                "shasum": ""
-            },
-            "require": {
-                "jakoch/phantomjs-installer": "2.1.1-p08",
-                "php": ">=5.4.0",
-                "symfony/config": "~2.3|~3.0",
-                "symfony/dependency-injection": "~2.3|~3.0",
-                "symfony/filesystem": "~2.3|~3.0",
-                "symfony/yaml": "~2.3|~3.0",
-                "twig/twig": "~1.16"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0",
-                "smalot/pdfparser": "~0.9",
-                "zendframework/zendpdf": "~2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "JonnyW\\PhantomJs\\": "src"
-                },
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jonny Wenmoth",
-                    "email": "contact@jonnyw.me",
-                    "homepage": "http://jonnyw.me/"
-                }
-            ],
-            "description": "A PHP wrapper for loading pages through PhantomJS",
-            "keywords": [
-                "Headless Browser",
-                "phantomjs",
-                "testing"
-            ],
-            "support": {
-                "issues": "https://github.com/jonnnnyw/php-phantomjs/issues",
-                "source": "https://github.com/jonnnnyw/php-phantomjs/tree/master"
-            },
-            "time": "2018-04-03T17:45:23+00:00"
         },
         {
             "name": "masterminds/html5",
@@ -1351,84 +1237,6 @@
                 "source": "https://github.com/symfony/yaml/tree/v3.4.24"
             },
             "time": "2019-03-25T07:48:46+00:00"
-        },
-        {
-            "name": "twig/twig",
-            "version": "v1.44.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/twigphp/Twig.git",
-                "reference": "0887422319889e442458e48e2f3d9add1a172ad5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/0887422319889e442458e48e2f3d9add1a172ad5",
-                "reference": "0887422319889e442458e48e2f3d9add1a172ad5",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.5",
-                "symfony/polyfill-ctype": "^1.8"
-            },
-            "require-dev": {
-                "psr/container": "^1.0",
-                "symfony/phpunit-bridge": "^4.4.9|^5.0.9"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.44-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Twig_": "lib/"
-                },
-                "psr-4": {
-                    "Twig\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
-                },
-                {
-                    "name": "Twig Team",
-                    "role": "Contributors"
-                },
-                {
-                    "name": "Armin Ronacher",
-                    "email": "armin.ronacher@active-4.com",
-                    "role": "Project Founder"
-                }
-            ],
-            "description": "Twig, the flexible, fast, and secure template language for PHP",
-            "homepage": "https://twig.symfony.com",
-            "keywords": [
-                "templating"
-            ],
-            "support": {
-                "issues": "https://github.com/twigphp/Twig/issues",
-                "source": "https://github.com/twigphp/Twig/tree/v1.44.7"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/twig/twig",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2022-09-28T08:38:36+00:00"
         }
     ],
     "packages-dev": [],

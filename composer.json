@@ -6,7 +6,6 @@
         "symfony/yaml": "3.4.26",
         "guzzlehttp/guzzle": "^7.4.5",
         "j0k3r/php-readability": "^1.2",
-        "apache/log4php": "^2.3",
-        "jonnyw/php-phantomjs": "^4.6"
+        "apache/log4php": "^2.3"
     }
 }
